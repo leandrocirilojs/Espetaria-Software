@@ -1,4 +1,4 @@
-
+alert()
     // Dados do aplicativo (simulando um banco de dados)
     let db = {
       produtos: JSON.parse(localStorage.getItem('produtos')) || [],
