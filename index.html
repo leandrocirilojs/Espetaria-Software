@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema de Controle de Vendas e Estoque</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --secondary: #475569;
+      --light: #f8fafc;
+      --dark: #1e293b;
+      --success: #22c55e;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #f1f5f9;
+      color: var(--dark);
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    header {
+      background-color: var(--primary);
+      color: white;
+      padding: 1rem 0;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .nav-link {
+      color: white;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 0.25rem;
+      cursor: pointer;
+    }
+
+    .nav-link:hover {
+      background-color: var(--primary-dark);
+    }
+
+    .nav-link.active {
+      background-color: white;
+      color: var(--primary);
+    }
+
+    main {
+      padding: 2rem 0;
+    }
+
+    .card {
+      background-color: white;
+      border-radius: 0.5rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    h2 {
+      margin-bottom: 1.5rem;
+      color: var(--dark);
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #cbd5e1;
+      border-radius: 0.25rem;
+      font-size: 1rem;
+    }
+
+    button {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.25rem;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    button:hover {
+      background-color: var(--primary-dark);
+    }
+
+    .btn-success {
+      background-color: var(--success);
+    }
+
+    .btn-danger {
+      background-color: var(--danger);
+    }
+
+    .btn-warning {
+      background-color: var(--warning);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+
+    th, td {
+      padding: 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    th {
+      background-color: #f8fafc;
+      font-weight: 600;
+    }
+
+    tr:hover {
+      background-color: #f1f5f9;
+    }
+
+    .actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .btn-small {
+      padding: 0.25rem 0.5rem;
+      font-size: 0.875rem;
+    }
+
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid #e2e8f0;
+      margin-bottom: 1rem;
+    }
+
+    .tab {
+      padding: 0.75rem 1.5rem;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+    }
+
+    .tab.active {
+      border-bottom: 2px solid var(--primary);
+      color: var(--primary);
+      font-weight: 500;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .alert {
+      padding: 0.75rem 1rem;
+      border-radius: 0.25rem;
+      margin-bottom: 1rem;
+    }
+
+    .alert-success {
+      background-color: #dcfce7;
+      color: #166534;
+    }
+
+    .alert-danger {
+      background-color: #fee2e2;
+      color: #991b1b;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .dashboard-card {
+      background-color: white;
+      border-radius: 0.5rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      padding: 1.5rem;
+      text-align: center;
+    }
+
+    .dashboard-value {
+      font-size: 2rem;
+      font-weight: bold;
+      margin: 1rem 0;
+    }
+
+    .low-stock {
+      background-color: #fef9c3;
+    }
+
+    .chart-container {
+      height: 300px;
+      margin-top: 1.5rem;
+    }
+
+    @media (max-width: 768px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    #module-container > div {
+      display: none;
+    }
+
+    #module-container > div.active {
+      display: block;
+    }
+
+    .search-bar {
+      margin-bottom: 1rem;
+    }
+
+    .flex {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .flex-between {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .mb-1 {
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <div class="logo">VendaFácil</div>
+        <div class="nav-links">
+          <a class="nav-link active" data-module="dashboard">Dashboard</a>
+          <a class="nav-link" data-module="produtos">Produtos</a>
+          <a class="nav-link" data-module="vendas">Vendas</a>
+          <a class="nav-link" data-module="relatorios">Relatórios</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <div id="module-container">
+        <!-- Dashboard Module -->
+        <div id="dashboard" class="active">
+          <h2>Dashboard</h2>
+          <div class="grid">
+            <div class="dashboard-card">
+              <h3>Total de Vendas (Hoje)</h3>
+              <div class="dashboard-value" id="vendas-hoje">R$ 0,00</div>
+            </div>
+            <div class="dashboard-card">
+              <h3>Vendas (Mês)</h3>
+              <div class="dashboard-value" id="vendas-mes">R$ 0,00</div>
+            </div>
+            <div class="dashboard-card">
+              <h3>Produtos</h3>
+              <div class="dashboard-value" id="total-produtos">0</div>
+            </div>
+            <div class="dashboard-card">
+              <h3>Estoque Total</h3>
+              <div class="dashboard-value" id="estoque-total">0</div>
+            </div>
+          </div>
+
+          <div class="card mt-4">
+            <h3>Produtos com Estoque Baixo</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>Produto</th>
+                  <th>Estoque Atual</th>
+                  <th>Estoque Mínimo</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody id="low-stock-table">
+                <!-- Produtos com estoque baixo serão adicionados aqui -->
+              </tbody>
+            </table>
+          </div>
+
+          <div class="card">
+            <h3>Últimas Vendas</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>Data</th>
+                  <th>Produto</th>
+                  <th>Quantidade</th>
+                  <th>Valor Total</th>
+                </tr>
+              </thead>
+              <tbody id="ultimas-vendas">
+                <!-- Últimas vendas serão adicionadas aqui -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Produtos Module -->
+        <div id="produtos">
+          <div class="flex-between mb-1">
+            <h2>Gerenciamento de Produtos</h2>
+            <button id="btn-novo-produto">Novo Produto</button>
+          </div>
+
+          <div id="form-produto" class="card" style="display: none;">
+            <h3 id="form-title">Adicionar Produto</h3>
+            <form id="produto-form">
+              <input type="hidden" id="produto-id">
+              <div class="form-group">
+                <label for="nome">Nome do Produto</label>
+                <input type="text" id="nome" required>
+              </div>
+              <div class="form-group">
+                <label for="descricao">Descrição</label>
+                <input type="text" id="descricao">
+              </div>
+              <div class="flex">
+                <div class="form-group" style="flex: 1;">
+                  <label for="preco">Preço (R$)</label>
+                  <input type="number" id="preco" min="0" step="0.01" required>
+                </div>
+                <div class="form-group" style="flex: 1;">
+                  <label for="estoque">Estoque Atual</label>
+                  <input type="number" id="estoque" min="0" required>
+                </div>
+                <div class="form-group" style="flex: 1;">
+                  <label for="estoque-minimo">Estoque Mínimo</label>
+                  <input type="number" id="estoque-minimo" min="0" required>
+                </div>
+              </div>
+              <div class="flex">
+                <button type="submit">Salvar</button>
+                <button type="button" id="btn-cancelar-produto" class="btn-danger">Cancelar</button>
+              </div>
+            </form>
+          </div>
+
+          <div class="card">
+            <div class="search-bar">
+              <input type="text" id="busca-produto" placeholder="Buscar produtos...">
+            </div>
+            <table>
+              <thead>
+                <tr>
+                  <th>Nome</th>
+                  <th>Descrição</th>
+                  <th>Preço</th>
+                  <th>Estoque</th>
+                  <th>Estoque Mínimo</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody id="produtos-table">
+                <!-- Produtos serão adicionados aqui -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Vendas Module -->
+        <div id="vendas">
+          <h2>Registro de Vendas</h2>
+          <div class="card">
+            <form id="venda-form">
+              <div class="form-group">
+                <label for="produto-venda">Produto</label>
+                <select id="produto-venda" required>
+                  <option value="">Selecione um produto</option>
+                  <!-- Produtos serão adicionados aqui -->
+                </select>
+              </div>
+              <div class="flex">
+                <div class="form-group" style="flex: 1;">
+                  <label for="quantidade-venda">Quantidade</label>
+                  <input type="number" id="quantidade-venda" min="1" value="1" required>
+                </div>
+                <div class="form-group" style="flex: 1;">
+                  <label for="preco-venda">Preço Unitário (R$)</label>
+                  <input type="number" id="preco-venda" min="0" step="0.01" readonly>
+                </div>
+                <div class="form-group" style="flex: 1;">
+                  <label for="total-venda">Total (R$)</label>
+                  <input type="number" id="total-venda" min="0" step="0.01" readonly>
+                </div>
+              </div>
+              <div id="estoque-disponivel-info"></div>
+              <button type="submit">Registrar Venda</button>
+            </form>
+          </div>
+
+          <div class="card">
+            <h3>Histórico de Vendas</h3>
+            <div class="search-bar">
+              <input type="text" id="busca-venda" placeholder="Buscar vendas...">
+            </div>
+            <table>
+              <thead>
+                <tr>
+                  <th>Data</th>
+                  <th>Produto</th>
+                  <th>Quantidade</th>
+                  <th>Valor Unitário</th>
+                  <th>Valor Total</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody id="vendas-table">
+                <!-- Vendas serão adicionadas aqui -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Relatórios Module -->
+        <div id="relatorios">
+          <h2>Relatórios</h2>
+          <div class="card">
+            <div class="tabs">
+              <div class="tab active" data-tab="vendas-periodo">Vendas por Período</div>
+              <div class="tab" data-tab="produtos-vendidos">Produtos Mais Vendidos</div>
+              <div class="tab" data-tab="estoque-atual">Posição de Estoque</div>
+            </div>
+            
+            <!-- Relatório: Vendas por Período -->
+            <div id="vendas-periodo" class="tab-content active">
+              <div class="flex">
+                <div class="form-group" style="flex: 1;">
+                  <label for="data-inicio">Data Inicial</label>
+                  <input type="date" id="data-inicio">
+                </div>
+                <div class="form-group" style="flex: 1;">
+                  <label for="data-fim">Data Final</label>
+                  <input type="date" id="data-fim">
+                </div>
+                <div class="form-group" style="flex: 0.5; display: flex; align-items: flex-end;">
+                  <button id="btn-gerar-relatorio-periodo">Gerar Relatório</button>
+                </div>
+              </div>
+              
+              <div id="relatorio-vendas-periodo-resultado">
+                <div class="dashboard-card">
+                  <h3>Total de Vendas no Período</h3>
+                  <div class="dashboard-value" id="total-vendas-periodo">R$ 0,00</div>
+                </div>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Data</th>
+                      <th>Produto</th>
+                      <th>Quantidade</th>
+                      <th>Valor Total</th>
+                    </tr>
+                  </thead>
+                  <tbody id="relatorio-vendas-periodo-table">
+                    <!-- Dados do relatório serão adicionados aqui -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            
+            <!-- Relatório: Produtos Mais Vendidos -->
+            <div id="produtos-vendidos" class="tab-content">
+              <div class="flex">
+                <div class="form-group" style="flex: 1;">
+                  <label for="data-inicio-produtos">Data Inicial</label>
+                  <input type="date" id="data-inicio-produtos">
+                </div>
+                <div class="form-group" style="flex: 1;">
+                  <label for="data-fim-produtos">Data Final</label>
+                  <input type="date" id="data-fim-produtos">
+                </div>
+                <div class="form-group" style="flex: 0.5; display: flex; align-items: flex-end;">
+                  <button id="btn-gerar-relatorio-produtos">Gerar Relatório</button>
+                </div>
+              </div>
+              
+              <table>
+                <thead>
+                  <tr>
+                    <th>Produto</th>
+                    <th>Quantidade Vendida</th>
+                    <th>Valor Total</th>
+                  </tr>
+                </thead>
+                <tbody id="relatorio-produtos-vendidos-table">
+                  <!-- Dados do relatório serão adicionados aqui -->
+                </tbody>
+              </table>
+            </div>
+            
+            <!-- Relatório: Posição de Estoque -->
+            <div id="estoque-atual" class="tab-content">
+              <button id="btn-gerar-relatorio-estoque" class="mb-1">Atualizar Dados</button>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Produto</th>
+                    <th>Estoque Atual</th>
+                    <th>Estoque Mínimo</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="relatorio-estoque-table">
+                  <!-- Dados do relatório serão adicionados aqui -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Dados do aplicativo (simulando um banco de dados)
+    let db = {
+      produtos: JSON.parse(localStorage.getItem('produtos')) || [],
+      vendas: JSON.parse(localStorage.getItem('vendas')) || []
+    };
+
+    // Funções utilitárias
+    function salvarDados() {
+      localStorage.setItem('produtos', JSON.stringify(db.produtos));
+      localStorage.setItem('vendas', JSON.stringify(db.vendas));
+    }
+
+    function formatarData(data) {
+      return new Date(data).toLocaleDateString('pt-BR');
+    }
+
+    function formatarMoeda(valor) {
+      return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    }
+
+    function gerarId() {
+      return Date.now().toString(36) + Math.random().toString(36).substring(2);
+    }
+
+    // Navegação entre módulos
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', () => {
+        // Remover classe active de todos os links
+        document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+        // Adicionar classe active ao link clicado
+        link.classList.add('active');
+        
+        // Esconder todos os módulos
+        document.querySelectorAll('#module-container > div').forEach(div => div.classList.remove('active'));
+        // Mostrar o módulo correspondente ao link clicado
+        const moduleId = link.getAttribute('data-module');
+        document.getElementById(moduleId).classList.add('active');
+        
+        // Atualizar o conteúdo do módulo
+        if (moduleId === 'dashboard') {
+          atualizarDashboard();
+        } else if (moduleId === 'produtos') {
+          listarProdutos();
+        } else if (moduleId === 'vendas') {
+          atualizarSelectProdutos();
+          listarVendas();
+        }
+      });
+    });
+
+    // Navegação entre tabs nos relatórios
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        // Remover classe active de todas as tabs
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        // Adicionar classe active à tab clicada
+        tab.classList.add('active');
+        
+        // Esconder todos os conteúdos de tab
+        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+        // Mostrar o conteúdo correspondente à tab clicada
+        const tabId = tab.getAttribute('data-tab');
+        document.getElementById(tabId).classList.add('active');
+      });
+    });
+
+    // ======= Módulo de Produtos =======
+    
+    // Exibir/esconder formulário de produto
+    document.getElementById('btn-novo-produto').addEventListener('click', () => {
+      document.getElementById('form-title').textContent = 'Adicionar Produto';
+      document.getElementById('produto-form').reset();
+      document.getElementById('produto-id').value = '';
+      document.getElementById('form-produto').style.display = 'block';
+    });
+
+    document.getElementById('btn-cancelar-produto').addEventListener('click', () => {
+      document.getElementById('form-produto').style.display = 'none';
+    });
+
+    // Adicionar/editar produto
+    document.getElementById('produto-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const id = document.getElementById('produto-id').value;
+      const produto = {
+        id: id || gerarId(),
+        nome: document.getElementById('nome').value,
+        descricao: document.getElementById('descricao').value,
+        preco: parseFloat(document.getElementById('preco').value),
+        estoque: parseInt(document.getElementById('estoque').value),
+        estoqueMinimo: parseInt(document.getElementById('estoque-minimo').value)
+      };
+      
+      if (id) {
+        // Editando produto existente
+        const index = db.produtos.findIndex(p => p.id === id);
+        if (index !== -1) {
+          db.produtos[index] = produto;
+        }
+      } else {
+        // Adicionando novo produto
+        db.produtos.push(produto);
+      }
+      
+      salvarDados();
+      listarProdutos();
+      document.getElementById('form-produto').style.display = 'none';
+      
+      // Atualizar select de produtos no módulo de vendas
+      atualizarSelectProdutos();
+      // Atualizar dashboard
+      atualizarDashboard();
+    });
+
+    // Listar produtos
+    function listarProdutos() {
+      const tbody = document.getElementById('produtos-table');
+      tbody.innerHTML = '';
+      
+      db.produtos.forEach(produto => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${produto.nome}</td>
+          <td>${produto.descricao}</td>
+          <td>${formatarMoeda(produto.preco)}</td>
+          <td>${produto.estoque}</td>
+          <td>${produto.estoqueMinimo}</td>
+          <td class="actions">
+            <button class="btn-small" onclick="editarProduto('${produto.id}')">Editar</button>
+            <button class="btn-small btn-danger" onclick="excluirProduto('${produto.id}')">Excluir</button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    // Editar produto
+    window.editarProduto = function(id) {
+      const produto = db.produtos.find(p => p.id === id);
+      if (produto) {
+        document.getElementById('produto-id').value = produto.id;
+        document.getElementById('nome').value = produto.nome;
+        document.getElementById('descricao').value = produto.descricao;
+        document.getElementById('preco').value = produto.preco;
+        document.getElementById('estoque').value = produto.estoque;
+        document.getElementById('estoque-minimo').value = produto.estoqueMinimo;
+        
+        document.getElementById('form-title').textContent = 'Editar Produto';
+        document.getElementById('form-produto').style.display = 'block';
+      }
+    };
+
+    // Excluir produto
+    window.excluirProduto = function(id) {
+      if (confirm('Tem certeza que deseja excluir este produto?')) {
+        db.produtos = db.produtos.filter(p => p.id !== id);
+        salvarDados();
+        listarProdutos();
+        atualizarDashboard();
+      }
+    };
+
+    // Buscar produtos
+    document.getElementById('busca-produto').addEventListener('input', (e) => {
+      const busca = e.target.value.toLowerCase();
+      const rows = document.querySelectorAll('#produtos-table tr');
+      
+      rows.forEach(row => {
+        const nome = row.cells[0].textContent.toLowerCase();
+        const descricao = row.cells[1].textContent.toLowerCase();
+        
+        if (nome.includes(busca) || descricao.includes(busca)) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+    });
+
+    // ======= Módulo de Vendas =======
+    
+    // Atualizar select de produtos
+    function atualizarSelectProdutos() {
+      const select = document.getElementById('produto-venda');
+      select.innerHTML = '<option value="">Selecione um produto</option>';
+      
+      db.produtos.forEach(produto => {
+        const option = document.createElement('option');
+        option.value = produto.id;
+        option.textContent = `${produto.nome} - ${formatarMoeda(produto.preco)}`;
+        select.appendChild(option);
+      });
+    }
+
+    // Atualizar preço e total ao selecionar produto
+    document.getElementById('produto-venda').addEventListener('change', () => {
+      const produtoId = document.getElementById('produto-venda').value;
+      const quantidade = parseInt(document.getElementById('quantidade-venda').value) || 0;
+      
+      if (produtoId) {
+        const produto = db.produtos.find(p => p.id === produtoId);
+        if (produto) {
+          document.getElementById('preco-venda').value = produto.preco;
+          document.getElementById('total-venda').value = produto.preco * quantidade;
+          
+          // Mostrar informação de estoque disponível
+          const estoqueInfo = document.getElementById('estoque-disponivel-info');
+          estoqueInfo.textContent = `Estoque disponível: ${produto.estoque} unidades`;
+          
+          if (produto.estoque < 5) {
+            estoqueInfo.style.color = 'red';
+          } else {
+            estoqueInfo.style.color = 'green';
+          }
+        }
+      } else {
+        document.getElementById('preco-venda').value = '';
+        document.getElementById('total-venda').value = '';
+        document.getElementById('estoque-disponivel-info').textContent = '';
+      }
+    });
+
+    // Atualizar total ao alterar quantidade
+    document.getElementById('quantidade-venda').addEventListener('input', () => {
+      const produtoId = document.getElementById('produto-venda').value;
+      const quantidade = parseInt(document.getElementById('quantidade-venda').value) || 0;
+      
+      if (produtoId) {
+        const produto = db.produtos.find(p => p.id === produtoId);
+        if (produto) {
+          document.getElementById('total-venda').value = produto.preco * quantidade;
+        }
+      }
+    });
+
+    // Registrar venda
+    document.getElementById('venda-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const produtoId = document.getElementById('produto-venda').value;
+      const quantidade = parseInt(document.getElementById('quantidade-venda').value);
+      
+      if (!produtoId) {
+        alert('Selecione um produto.');
+        return;
+      }
+      
+      const produto = db.produtos.find(p => p.id === produtoId);
+      
+      if (!produto) {
+        alert('Produto não encontrado.');
+        return;
+      }
+      
+      if (quantidade <= 0) {
+        alert('A quantidade deve ser maior que zero.');
+        return;
+      }
+      
+      if (quantidade > produto.estoque) {
+        alert('Quantidade indisponível em estoque.');
+        return;
+      }
+      
+      // Atualizar estoque
+      produto.estoque -= quantidade;
+      
+      // Registrar venda
+      const venda = {
+        id: gerarId(),
+        data: new Date().toISOString(),
+        produtoId: produto.id,
+        produtoNome: produto.nome,
+        quantidade: quantidade,
+        valorUnitario: produto.preco,
+        valorTotal: produto.preco * quantidade
+      };
+      
+      db.vendas.push(venda);
+      salvarDados();
+      
+      // Limpar formulário
+      document.getElementById('venda-form').reset();
+      document.getElementById('preco-venda').value = '';
+      document.getElementById('total-venda').value = '';
+      document.getElementById('estoque-disponivel-info').textContent = '';
+      
+      // Atualizar tabela de vendas
+      listarVendas();
+      
+      // Atualizar dashboard
+      atualizarDashboard();
+      
+      alert('Venda registrada com sucesso!');
+    });
+
+    // Listar vendas
+    function listarVendas() {
+      const tbody = document.getElementById('vendas-table');
+      tbody.innerHTML = '';
+      
+      // Ordenar vendas por data (mais recentes primeiro)
+      const vendasOrdenadas = [...db.vendas].sort((a, b) => new Date(b.data) - new Date(a.data));
+      
+      vendasOrdenadas.forEach(venda => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${formatarData(venda.data)}</td>
+          <td>${venda.produtoNome}</td>
+          <td>${venda.quantidade}</td>
