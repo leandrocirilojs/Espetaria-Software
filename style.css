@@ -233,11 +233,152 @@
       margin-top: 1.5rem;
     }
 
+    @media (max-width: 768px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    #module-container > div {
+      display: none;
+    }
+
+    #module-container > div.active {
+      display: block;
+    }
+
+    .search-bar {
+      margin-bottom: 1rem;
+    }
+
+    .flex {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .flex-between {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .mb-1 {
+      margin-bottom: 1rem;
+    }
+
+
+@media (max-width: 768px) {
+  .nav-links {
+    display: none; /* Esconde os links em telas pequenas */
+  }
+
+  .menu-icon {
+    display: block; /* Mostra o ícone do menu */
+    cursor: pointer;
+  }
+
+  .logo {
+    font-size: 1.2rem; /* Reduz o tamanho do logo */
+  }
+
+  header {
+    padding: 0.5rem 0; /* Reduz o padding */
+  }
+}
+
+
+  .grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr; /* Uma coluna em telas pequenas */
+  }
+}
+
+
+    @media (max-width: 768px) {
+  table {
+    display: block;
+  }
+
+  tr {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.5rem;
+    padding: 1rem;
+  }
+
+  td, th {
+    border: none;
+    padding: 0.5rem 0;
+  }
+
+  th {
+    display: none; /* Esconde cabeçalhos em telas pequenas */
+  }
+
+  td::before {
+    content: attr(data-label); /* Adiciona rótulos para cada campo */
+    font-weight: bold;
+    display: block;
+    margin-bottom: 0.25rem;
+  }
+    }
+
+
+@media (max-width: 768px) {
+  .flex {
+    flex-direction: column; /* Coloca os campos em coluna */
+  }
+
+  .form-group {
+    margin-bottom: 1rem;
+  }
+
+  button {
+    width: 100%; /* Botões ocupam a largura total */
+    margin-bottom: 0.5rem;
+  }
+}
+
+
+    .menu-icon {
+  display: none; /* Esconde o ícone por padrão */
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .menu-icon {
+    display: block; /* Mostra o ícone em telas pequenas */
+  }
+
+  .nav-links {
+    display: none;
+    flex-direction: column;
+    background-color: var(--primary);
+    position: absolute;
+    top: 60px;
+    right: 0;
+    width: 100%;
+    padding: 1rem;
+  }
+
+  .nav-links.active {
+    display: flex; /* Mostra os links quando o menu está ativo */
+  }
+}
+
+
+    
     
 
 
 
-
-
     
-
