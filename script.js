@@ -1,5 +1,5 @@
 
-    // Dados do aplicativo (simulando um banco de dados)
+    // Dados do aplicativo (simulando um banco de dados) usando localstorad
     let db = {
       produtos: JSON.parse(localStorage.getItem('produtos')) || [],
       vendas: JSON.parse(localStorage.getItem('vendas')) || []
